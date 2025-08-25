@@ -1,0 +1,263 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id               String             @id @default(uuid())
+  username         String?
+  firstName        String?
+  midName          String?
+  lastName         String?
+  email            String             @unique
+  secondEmail      String?
+  password         String
+  phone            String?
+  profile          String?
+  address          String?
+  landerName       String?            @unique
+  nickName         String?
+  affiliate        String?
+  aggreement       Boolean?
+  discount         Int?
+  package          String?
+  frequency        String?
+  verify           Boolean            @default(false)
+  domain           String?
+  planKey          String?
+  planPrice        Float?
+  planOldPrice     Float?
+  planId           String?            @default(uuid())
+  cardNumber       String?
+  secureKey        String?
+  role             Role
+  membership       userMembership[]
+  extraWisetbands  extraWisetbands[]
+  otpModel         otpModel[]
+  referralCustomer referralCustomer[]
+  userTemplete     userTemplete[]
+  discounts        discount[]
+  create_at        DateTime           @default(now())
+  update_at        DateTime           @updatedAt
+}
+
+model extraWisetbands {
+  id        String        @id @default(uuid())
+  name      WisetbandName
+  count     Int
+  userId    String
+  user      user          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  create_at DateTime      @default(now())
+  update_at DateTime      @updatedAt
+}
+
+enum WisetbandName {
+  BLACK
+  RED
+  GREEN
+  YELLOW
+  BLUE
+  WHITE
+  ORANGE
+}
+
+model userMembership {
+  id            String   @id @default(uuid())
+  plan          String
+  price         Int
+  duration      String
+  expired       Boolean
+  status        String
+  activate_at   String
+  oldPrice      Int
+  transactionId String
+  userId        String
+  user          user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  create_at     DateTime @default(now())
+  update_at     DateTime @updatedAt
+}
+
+model userTemplete {
+  id               String             @id @default(uuid())
+  layout           Layout
+  bio              String?
+  tagLine          String?
+  offerings        String?
+  funnySaying      String?
+  logo             String?
+  portrait         String?
+  banner           String?
+  background       String?
+  epkFile          String?
+  favicon          String?
+  heading          String?
+  title            String?
+  footerText       String?
+  footerWidget     String?
+  headBtnLeft      String?
+  headBtnRight     String?
+  centerHeading    String?
+  centerDescripion String?
+  vcfFile          String?
+  headerBgType     Type
+  headerBg         String?
+  ContentBGType    Type
+  ContentBg        String?
+  footerBgType     Type
+  FooterBg         String?
+  merchendiseUrl   String?
+  songRequest      String?
+  verify           Boolean?           @default(false)
+  userId           String
+  buttonSet        buttonSet[]
+  referralCustomer referralCustomer[]
+  services         services[]
+  templateInfo     templateInfo[]
+  user             user               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  create_at        DateTime           @default(now())
+  update_at        DateTime           @updatedAt
+}
+
+model services {
+  id         String       @id @default(uuid())
+  title      String
+  templateId String
+  template   userTemplete @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  create_at  DateTime     @default(now())
+  update_at  DateTime     @updatedAt
+}
+
+model referralCustomer {
+  id          String       @id @default(uuid())
+  referalCode String       @unique
+  joined      Int
+  tier        String
+  templateId  String
+  template    userTemplete @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  userId      String
+  user        user         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  create_at   DateTime     @default(now())
+  update_at   DateTime     @updatedAt
+}
+
+enum Type {
+  IMAGE
+  COLOR
+}
+
+enum Layout {
+  LEFT
+  RIGHT
+  CENTER
+}
+
+model buttonSet {
+  id         String       @id @default(uuid())
+  name       ButtonName
+  url        String
+  templateId String
+  templete   userTemplete @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  create_at  DateTime     @default(now())
+  update_at  DateTime     @updatedAt
+}
+
+enum ButtonName {
+  FACEBOOK
+  TWITTER
+  LINKEDIN
+  YOUTUBE
+  CUSTOM
+  SNAPCHAT
+  TIKTOK
+  EMAIL
+  PHONE
+  INSTAGRAM
+  REDDIT
+  TUMBLR
+  PINTEREST
+  WHATSAPP
+  WECHAT
+  TELIGRAM
+  DISCORD
+  TWITCH
+  GITHUB
+  SOUNDCLOUD
+  VIMEO
+  SPOTIFY
+  CLUBHOUSE
+  PERISCOPE
+  DRIBBLE
+  BEHANCE
+  DAILYMOTION
+  MIXCLOUD
+  FLICKR
+  ANCHOR
+  PATREON
+  NEXTDOOR
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model otpModel {
+  id        String   @id @default(uuid())
+  email     String
+  userId    String
+  expireIn  DateTime
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      Int      @unique
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
+}
+
+model contact {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  phone     String
+  subject   String
+  seen      Boolean  @default(false)
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
+}
+
+model discount {
+  id        String   @id @default(uuid())
+  name      String
+  code      String
+  amount    String
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
+}
+
+model domainReq {
+  id        String   @id @default(uuid())
+  domain    String
+  email     String
+  create_at DateTime @default(now())
+  update_at DateTime @updatedAt
+}
+
+model templateInfo {
+  id         String       @id @default(uuid())
+  name       String
+  email      String
+  phone      String
+  note       String
+  lat        Float?
+  lon        Float?
+  accu       Float?
+  templateId String
+  templete   userTemplete @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  create_at  DateTime     @default(now())
+  update_at  DateTime     @updatedAt
+}
