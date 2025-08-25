@@ -25,7 +25,7 @@ const createVcfController = require("../middleware/create.vcf");
 router.get("/", auth, getAllOnboard);
 router.get("/admin", auth, getAllOnboardByAdmin);
 router.get("/:id", auth, getOneOboardById);
-router.get("/wirframe/:name", auth, getOneOboard);
+router.get("/wirframe/:name", getOneOboard);
 router.post("/", auth, medias, onboardingUser);
 router.post("/createvfc", auth, medias, createVcfController);
 router.post("/recreate/:id", auth, recreatePayment);
